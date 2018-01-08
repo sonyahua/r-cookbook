@@ -1,0 +1,220 @@
+---
+title: "ch-5-data-structures"
+author: "Sonya Hua"
+date: "January 7, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Covering matrices, lists, factors, and data frames.
+
+Vectors are homogeneous, can be indexed by position, can have names.
+Lists are heterogeneous, can be indexed by position, lets you extract sublists, and can have names. 
+
+Mode: how it is stored in memory (i.e. char, num, etc.)
+Class: defines the object's abstract type (i.e. a Date object consists of a single nnumber but has a class of Date)
+Scalars: a vector that contains exactly 1 element
+Matrices: a vector that has dimensions (i.e. 2x3)
+```{r}
+A <- 1:6
+dim(A) <- c(2,3)
+A
+```
+
+Arrarys: 3D or n-dimensional structures
+```{r}
+D <- 1:12
+dim(D) <- c(2,3,2)
+D
+```
+
+Factors: has levels whic is used for efficient storage of data and can be used in statistical models. There are 2 types: Categorical variables and grouping
+
+Data Frames: tabular data structure with rows and columns. Data frame is a list with elements and vectors. 
+
+```{r}
+# To insert data into a vector
+
+append(1:10, 99999, after = 5)
+```
+
+```{r}
+# To create a factor
+v <- c(1,2,3,4,5)
+f <- factor(v)
+f
+
+# Create levels
+f <- factor(v, c("Strongly DA","Somewhat DA","Neutral","Somewhat A", "Strongly A"))
+f
+
+# To convert variable into a factor, just call factor on the variable
+```
+
+When an R function requires a factor, it usually converts data to a factor automatically. 
+
+```{r}
+# To combine vectors into one large vector and create a parallel factor var that identifies each value's original group
+
+comb <- stack(list(v1=values1, v2=values2, v3=values3))
+# V1, v2, and v3 are the values in 2nd column
+```
+
+For lists ,we can access single elements using double brackets
+
+```{r}
+years <- list(c(1999,2000), 2007, 1989, 1991, 2011)
+years
+
+
+```
+
+
+```{r}
+
+# This is an element, not a list. It is the nth element of years
+years[[1]]
+class(years[[1]])
+```
+```{r}
+
+# This is a list, not an element. The list contains 1 element taken from the nth element of list
+years[1]
+class(years[1])
+```
+The difference becomes apparent when we inspect the structure of hte result - one is numeric, the other is a list
+
+```{r}
+cat(years[[1]])
+```
+
+```{r}
+
+# Error since it's not atomic
+cat(years[1])
+```
+
+### Slecting List Elements by Name
+```{r}
+# Access list elements by names
+
+years <- list(Kennedy=c(1960, 1961), Johnson=1964, Carter=1976, Clinton=1994)
+years[["Kennedy"]] # Element
+years["Kennedy"] # List
+years$Kennedy
+```
+
+### Building a Name and Value list
+
+You can associate the names and values by creating an emptry list then populating with a vectorized assignment statement
+
+```{r}
+# Sometimes you have a vector of names an dvector of values to go along with it
+(values <- pnorm(-2:2))
+names <- c("A","B","C","D","E")
+
+alist <- list()
+alist[names] <- values
+alist
+```
+
+```{r}
+for (nm in names(alist))
+  cat("The", nm, "is", alist[[nm]], "\n")
+```
+
+```{r}
+# To remove a list element assign NULL
+years[["Johnson"]] <- NULL
+
+# To unlist into a vector for basic stat functions that only work on vctors
+unlist(years)   
+```
+
+
+
+### To remove null elements from a list
+
+`sapply` is equivalent to `lapply` but works for vectors and amtrices
+
+```{r}
+alist2 <- list("Moe",NULL, "Sal")
+alist2
+
+# Removes NULL element from list
+alist2[sapply(alist2, is.null)] <- NULL
+alist2
+
+
+# Or
+
+alist2[is.na(alist2)] <- NULL
+```
+
+### Create a data frame
+```{r}
+dfrm <- data.frame(v1, v2, v3, f1, f2)
+
+```
+### Selecting Rows and Columns of DF more easily
+
+```{r}
+data(AMSsurvey)
+ams <- data("AMSsurvey")
+AMSsurvey
+subset(AMSsurvey, sex=="Female")
+subset(AMSsurvey, select=citizen)
+```
+
+```{r}
+
+# combine select and subset arguments
+
+subset(AMSsurvey, select=c(sex,citizen), subset=(sex=="Female" & citizen=="US"))
+```
+```{r}
+sample <- AMSsurvey
+colnames(AMSsurvey)
+
+```
+
+
+```{r}
+# To remove rows with NAs, use na.omit
+sample <- na.omit(AMSsurvey)
+
+
+# To exclude columns by name
+
+subset(sample, select = -sex)
+
+# To exclude  column by position
+sample[-1]
+```
+
+```{r}
+# To combine data frames by rows
+allrows <- rbind(df1, df2)
+allcolumns <- cbind(df1, df2)
+```
+
+```{r}
+# To access data frame columns more easily instead of repeatedly typing the df name
+
+attach(sample)
+(sex)
+detach(sample)
+```
+
+## Converting data structures into another type
+
+```{r}
+as.data.frame(x)
+as.llist(x)
+as.matrix(x)
+as.vector(x)
+```
+

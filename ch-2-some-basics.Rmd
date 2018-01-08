@@ -1,0 +1,183 @@
+---
+title: "ch-2-some-basics"
+author: "Sonya Hua"
+date: "January 6, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(echo = TRUE)
+
+# set global display parameters
+knitr::opts_chunk$set(fig.width=8, fig.height=5, echo = TRUE, fig.align="center") 
+```
+
+In order to combine multiple items of different types into a continuous output, use `cat`. `cat` puts a space between each item by default. You must provide a newline character ('\n') to terminate the line
+
+```{r}
+cat("The zero occurs at", 2*pi, "radians", "\n")
+
+fib <- c(0,1,1,2,3,5,8,13,21,34)
+cat("The first few Fibonacci numbers are:", fib)
+```
+
+### Listing Variables
+
+Use `ls` to list variables and functions defined in workspace. It returns a vector of strings giving hte names of objects in workspace
+```{r}
+ls()
+```
+`ls.str` returns the variable name and applies the `str` function to the variable
+```{r}
+
+# For more detail
+ls.str()
+```
+
+### Deleting variables & Erasing workspace
+
+Use `rm` to remove variables or functions from workspace.
+Use `rm(list=ls())` where list argument consts of a vector of names of variables to remove
+```{r}
+x <- "Hi"
+rm(x)
+
+
+# Erase all variables and functions in a workspace
+rm(list=ls())
+```
+
+### Create a vector
+
+A vector is a set of values of one data type in the form `c(.....)`
+
+If the arguments of a vector contains vectors themselves, it flattens them and combines them into one single vector. 
+
+```{r}
+v1 <- c(1,2,3)
+v2 <- c(4,5,6)
+
+c(v1,v2)
+```
+
+### Basic Statistics
+
+```{r}
+x <- c(0,1,1,2,3,5,8,13,21,34)
+
+mean(x)
+median(x)
+sd(x)
+var(x)
+```
+To calculate correlation and covariance, there must not be any NA's. Even one missing value will cause the functions to return NA. To override this, use `na.rm==TRUE` to ignore NA's
+```{r}
+y <- log(x+1)
+
+cor(x,y)
+cov(x,y)
+```
+```{r}
+x <- c(0,1,1,2,3,NA)
+mean(x,na.rm=TRUE)
+mean(x)
+```
+For data frames, `mean` and `sd` will calculate per column variable. 
+```{r}
+dframe <- data.frame(data(iris))
+data(iris)
+
+drop <- 'Species'
+df <- iris[, !names(iris) %in% drop]
+
+str(df)
+
+# Returns a correlation matrix
+cor(df)
+
+# Returns a covarariance matrix
+var(df)
+```
+
+The `median` function does not understand data frames. To calculate median of each column, use `apply` to each column with median funtion
+
+### Creating Sequences
+
+```{r}
+0:5
+
+seq(from=0, to=100, by=5)
+
+# Repeated values
+rep(1, times=5)
+
+# Count backwards
+10:0
+
+# Specify a length for the output sequence and R will automatically calculate the increments needed
+seq(from=0,to=20, length.out=7)
+
+```
+
+### Vector Arithmetic
+
+Arithmetic on vectors is on an element wise level. Length of each vector must be the same
+```{r}
+v <- c(11,12,13,14,15)
+w <- c(1,2,3,4,5)
+
+v+w
+v-w
+v*w
+v/w
+w*v
+
+# Calculdate z-score manually
+(w - mean(w))/sd(w)
+```
+
+For lists, one generally uses [[ to select any single element, whereas [ returns a list of the selected elements.
+
+The [[ form allows only a single element to be selected using integer or character indices, whereas [ allows indexing by vectors.
+
+### Defining functions
+
+Use `function` keyword followed by a list of parameters and the function body. `{ }` should be used around the body function for expressions.
+```{r}
+# To calculate coefficient of variation
+
+cv <- function(x) sd(x)/mean(x)  # create a function and assign it to cv
+cv(1:10) # use 1:10 as value of x
+```
+
+A multiline function requires curly braces to delimit the start and end of the function.
+
+```{r}
+# Cacluate Euclid's algorithm for computing the greatest common divisor of 2 integers
+gcd <- function(a,b) {
+  if (b==0) return (a)
+  else return(gcd(b, a %% b))
+}
+
+```
+`%%` modulo operator 
+
+R also allows anonymous or undefined functions. 
+
+```{r}
+lst <- c(1,2,3,3,4,5)
+lapply(lst, function(x) sd(x) / mean(x))
+```
+####Other tips
+
+`>` = normal prompt
+`+` = continuation prompt
+
+Use `==` for comparisons and `=` for assigning variables
+
+Use `library` or `require` to load packages into search path
+
+If a variable `lst` contains a list, it can be indexed in 2 ways: `lst[[n]]` is the nth element of hte list; whereas `lst[n]` is a list whose only element is the nth element of `lst`. 
+
+Do not pass multiple arguments to a single-argument function. Functions like `mean` only takes one argument and if we want to calculate the mean of 9, 10, and 11, we need to do `mean(c(9,10,11))`

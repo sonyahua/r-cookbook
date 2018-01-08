@@ -1,0 +1,64 @@
+---
+title: "ch-3-navigating-r"
+author: "Sonya Hua"
+date: "January 6, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(echo = TRUE)
+
+# set global display parameters
+knitr::opts_chunk$set(fig.width=8, fig.height=5, echo = TRUE, fig.align="center") 
+```
+
+### Getting and setting the working directory
+
+```{r}
+getwd()
+
+#setwd() to set working directory
+
+```
+
+### Saving Workspace
+
+The workspace holds R variables and functions. It's created when R starts. Use `save.image` function to save worksapce momentarily. The worksapce is written to a filecalled .Rdata in the working directory. When R starts, it looks for htat file and initialized the wrokspace. 
+
+```{r}
+# To see list of packages currently loaded into R
+search()
+
+# To access built-in datasets
+data(iris)
+head(iris)
+help(iris)  # Brings up a description of the data set
+
+# To see a table of contents for datasets
+data()
+data(package="MASS")
+
+# To view list of installed packages
+library()
+```
+
+
+### Setting a default CRAN mirror
+
+You want to set a default CRAN mirror so R does not prompt for one everytime
+
+```{r}
+chooseCRANmirror()
+```
+
+### Configuring default packages to be loaded each time R runs
+
+Set a config parameter called `defaultPackages`, a list of packages loaded by R at startup. It initally contains a system-deflined list. If I append package names to the list then R will load them, saving me from having to call `library` each time.
+
+```{r}
+install.packages("ggplot")
+install.packages("ggplot2")
+
+```
+
