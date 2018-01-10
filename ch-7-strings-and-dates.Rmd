@@ -1,0 +1,161 @@
+---
+title: "ch-6-strings-and-dates"
+author: "Sonya Hua"
+date: "January 7, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Date: a calendar date but not a clock time.
+POSIXct: a datetime class that can represent a moment in time with an accuracy of 1 second. It's stored as the number of seconds since 1/1/1970. Recommended format for storing datetime info in data frame. 
+POSIXlt: a datetime class stored as year, month, day, hour, minute, second
+
+timeDate package is a high-powered package with well-thought-out facilities for handling dates and times, including date arithmetic, business days, holidays, conversions, and generalized handling of time zones. 
+
+### Getting the length of a string
+
+```{r}
+# count the number of characters in a strong or vector
+s <- c("Moe","Larry", "Curly")
+nchar(s)
+
+# Count the number of elements
+length("Moe")
+length(s)
+```
+
+### Concatenating STrings
+
+```{r}
+
+# By default, paste inserts a single space between pairs of strings. 
+paste("Everybody", "loves","stats")
+paste("Everybody", "loves", "states", sep=".")
+
+# It converts an numbers to characters
+paste("The square root of pi is", sqrt(pi))
+```
+
+```{r}
+# To extract a portion of a string according to position, use substr(string,start,end)
+
+substr("Statistics", 1, 4)
+substr("Statistics", 7, 10)
+
+# It can be aplied to every element of a string
+
+ss <- c("Jeff", "Sonya", "Amy")
+substr(ss,1,1)
+
+cities <- c("New York, NY", "Los Angeles, CA", "Peoria, IL")
+substr(cities, nchar(cities)-1, nchar(cities))
+substr(cities, 1, nchar(cities)-4)
+```
+### Split a string according to a delimiter
+```{r}
+path <- "/home/mike/data/trials.csv"
+strsplit(path, "/")
+```
+
+### Replacing substrings
+
+```{r}
+
+# To replace first instance of a substring, use sub(find, replace, string)
+s <- "Curly is the smart one. Curly is funny, too."
+s <- sub("Curly", "Moe", s)
+sub("Moe", "Sonya", s)
+
+# To replace all instances of a substring, use gsub(old, new, string)
+s <- "Curly is the smart one. Curly is funny, too."
+gsub("Curly", "Sonya" ,s)
+
+# To remove a substring for once, set the substring to be empty
+sub("the ","", s)
+
+```
+
+# Generate pairwise combinations of strings
+
+The outer function can accept any function for its third argument. In this recipe, we replace multiplication with string concatenation (paste). The results is a combination of all strings
+
+
+`outer(string1, string2, function, sep="")`
+```{r}
+# Use outer and paste functions together to generate the matrix of all possible combinations
+locations <- c("NY","LA", "CHI", "HOU")
+treatments <- c("T1","T2","T3")
+
+outer(locations, treatments, paste, sep=".")
+dput(outer(locations, treatments, paste, sep="."))
+
+# To output as a vector instead
+as.vector(outer(locations, treatments, paste, sep="."))
+```
+
+Suppose we want to only output unique pairwise combinations of treatments. We can eliminate redundancy by removing the lower triangle (or upper triangle). The `lower.tri` function identifies that triangle, so inverting it identifies all elements outside the lower triangle
+
+```{r}
+m <- outer(treatments, treatments,paste,sep='.')
+m
+lower.tri(m) # captures values of lower triangle or the repetitive values
+m[!lower.tri(m)] # removes lower triangle values
+```
+
+### Get the current date
+```{r}
+Sys.Date()
+class(Sys.Date())
+```
+
+### Convert a string into a date
+
+How to convert "2010-12-31" into a date? We can use `as.Date` but we must know the format of the string. By default, `as.Date` assuems the string looks like yyyy-mm-dd. The string can be in other date formats but we then must specify the `format=` argument so it can be interpreted
+
+```{r}
+as.Date("2017-12-31")
+as.Date("12/31/2017", format="%m/%d/%Y")
+```
+
+### Convert Year, Month, and Day into a Date
+
+```{r}
+#ISOdate(year, month, day)
+
+ISOdate(2012,2,29)
+```
+### Extract parts of a date
+
+Convert a `Date` object to a `POSIXlt`, a list of date parts. Extract date parts such as the day of week, day of year, calendar day, calendar month, or calendar year
+
+```{r}
+d <- as.Date("2010-03-15")
+p <- as.POSIXlt(d)
+
+p$mday  # Day of Month
+p$mon  # Month
+p$year  # year
+p$wday  # weekday (0 = Sunday)
+```
+
+### Create a Sequence of Dates
+
+```{r}
+s <- as.Date("2012-01-01")
+e <- as.Date("2012-02-01")
+
+seq(from=s, to=e, by=1)  # by 1 day
+
+seq(from=s, by=1, length.out=7)
+```
+
+```{r}
+seq(from=s, by="month", length.out=12)
+```
+```{r}
+seq(from=s, by="week", length.out=52)
+```
+
