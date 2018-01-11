@@ -1,0 +1,96 @@
+---
+title: "ch-8-probability"
+author: "Sonya Hua"
+date: "January 10, 2018"
+output: html_document
+---
+
+Distrete distributions include:
+- binomial
+- geometric
+- hypergeometric
+- negative binomial
+- poisson
+
+Continuous distributions include:
+- beta
+- cauchy
+- chi-squeared
+- exponential
+- F
+- gamma
+- log-normal
+- logistic
+- student's T
+- normal
+- uniform
+- Weibull
+- Wilcoxon
+
+### Counting the number of combinations
+
+To calculate the number of combinations of *n* items taken *k* at a time, use `choose`. This calculates the number of distinct subsets of size k that can be created from *n* items
+
+```{r}
+
+# How many ways can we select 3 items from 5 items?
+choose(5,3)
+
+# How many ways can we select 3 items from 50 items?
+choose(50,3)
+```
+
+### Generate Combinations of items
+
+```{r}
+
+# Generate all combinations of 1,2,3 taken twice at a time
+combn(c(1,2,3), 2)
+
+# Generate combinations of strings
+combn(c("T1","T2","T3","T4","T5"),3)
+```
+
+### Generate random numbers 
+
+```{r}
+# Generate a uniform random number between 0 and 1
+runif(1)
+runif(5)
+
+# Generate random numbers from other distributions. For a given distribution, the name of the random number generator is "r" prefixed to the distribution.
+
+rnorm(1)
+rchisq(1,df=3)
+
+```
+
+```{r}
+runif(10)
+```
+
+```{r}
+rbinom(10, size=100, prob=0.5)
+```
+
+```{r}
+# Calculate 100 draws of a normal variate whose mean is itself randomly distributed and with hyperparameters of mean = 0 , sd = 0.2
+
+means <- rnorm(100, mean=0, sd=0.2)
+rnorm(100, mean=means, sd=1)
+```
+
+### Generate Reproducible Random Numbers
+
+```{r}
+set.seed(123)
+runif(10)
+
+
+runif(10)
+
+set.seed(123)
+runif(10)
+```
+
+### Generating a Random Sample
