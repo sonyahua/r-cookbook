@@ -94,3 +94,28 @@ runif(10)
 ```
 
 ### Generating a Random Sample
+
+```{r}
+# The sample function randomly selects n items from a vector
+data("iris")
+iris
+
+
+# Drawing 4 items from species
+sample(iris$Species, 4)
+```
+### To generate random sequences
+
+Such as a series of simulated coin tosses or simulated sequences of Bernoulli trials. By default, `sample` will choose equally among the set elements unless we specify the probability with `prob=` argument
+
+```{r}
+
+# To sample with replacement means it will select the same item > 1
+
+sample(c("H","T"), 10, replace=T)
+sample(c("H","T"), 10, replace=T, prob=c(0.3,0.7))
+
+# Without replacement
+sample(c("H", "T", "C"), 3, replace=F)
+```
+
